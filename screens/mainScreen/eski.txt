@@ -1,0 +1,94 @@
+import React, { Component } from "react";
+
+import { Keyboard, Text, View, Image, TextInput, Modal, TouchableWithoutFeedback, Alert, KeyboardAvoidingView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
+import { openDetailLocationModal } from "../../navigation/navigation"
+
+export default class LoginScreen extends Component {
+
+  state = {
+    search: '',
+  };
+  updateSearch = search => {
+    this.setState({ search });
+  };
+  componentDidMount() {
+  }
+
+  componentWillUnmount() {
+  }
+
+  onLoginPress() {
+
+  }
+  renderCampLocation() {
+    return (
+      <ScrollView>
+        <TouchableOpacity onPress={() => { openDetailLocationModal() }} >
+          <View style={{ elevation: 8, height: 210, width: '90%', alignSelf: 'center', marginBottom: 10, marginTop: 15, borderRadius: 15, backgroundColor: 'white', justifyContent: 'flex-start', flexDirection: 'row' }}>
+
+            <View style={{ height: 90, width: 90, marginLeft: 10, borderRadius: 15, backgroundColor: 'whitesmoke', justifyContent: 'center', marginTop: 10 }}>
+              <Image
+                style={{ height: 90, width: 90, borderRadius: 15, alignSelf: 'center' }}
+                source={require('../../tempimages/kampp.jpg')}
+              />
+            </View>
+            <View style={{ height: 90, width: 205, marginLeft: 10, borderRadius: 15, backgroundColor: 'whitesmoke', marginTop: 10 }}>
+              <Text>AKDENİZ CAMPİNG KÖYCEĞİZ GÖLÜ, SULTANİYE KÖYÜ, MUĞLA</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+      </ScrollView>
+    )
+  }
+
+  render() {
+    const { search } = this.state;
+
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'whitesmoke'
+      }}>
+        {false &&
+          <Modal
+            transparent={true}
+            animationType={'none'}
+            visible={true}
+            onRequestClose={() => { console.log('close modal') }}>
+            <View style={styles.modalBackground}>
+              <View style={{ borderRadius: 9999, backgroundColor: 'white', width: 70, height: 70, justifyContent: 'center' }}>
+                <Image
+                  style={{ height: 50, width: 50, alignSelf: 'center' }}
+                  source={require('../../src/gifs/load.gif')}
+                ></Image>
+              </View>
+            </View>
+          </Modal>}
+        <SearchBar
+          placeholder="Type Here..."
+          containerStyle={{ backgroundColor: 'white', maxHeight: 50, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, borderTopLeftRadius: 15, borderBottomColor: 'white', borderTopColor: 'white', width: '90%', alignSelf: 'center', marginTop: 10 }}
+          inputStyle={{ backgroundColor: 'white' }}
+          inputContainerStyle={{ backgroundColor: 'white', }}
+          onChangeText={this.updateSearch}
+          value={search}
+        />
+
+        {this.renderCampLocation()}
+      </View>
+    );
+  }
+}
+const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
+
+});
