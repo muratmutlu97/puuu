@@ -47,11 +47,13 @@ Navigation.setDefaultOptions({
   blurOnUnmount: true,
 
 });
-export const openDetailLocationModal = () => Navigation.showModal({
+export const openDetailLocationModal = (props) => Navigation.showModal({
   stack: {
     children: [{
       component: {
         name: 'detailLocation',
+        passProps: props,
+
         options: {
           topBar: {
             visible: true,

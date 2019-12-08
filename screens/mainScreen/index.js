@@ -30,6 +30,7 @@ export default class LoginScreen extends Component {
 
     }).then(response => response.json())
     .then(data => {
+      
       var temp =this.state.campLocations
       temp.push.apply(temp,data)
       this.setState({campLocations:temp})
@@ -52,10 +53,10 @@ export default class LoginScreen extends Component {
   onLoginPress() {
 
   }
-  renderCampLocation(name,address) {
+  renderCampLocation(props,name,address) {
     return (
       <ScrollView>
-        <TouchableWithoutFeedback onPress={() => { openDetailLocationModal() }} >
+        <TouchableWithoutFeedback onPress={() => { openDetailLocationModal(props) }} >
           <View style={{ elevation: 8, height: 160, width: '90%', alignSelf: 'center', marginBottom: 10, marginTop: 15, borderRadius: 15, backgroundColor: 'white', justifyContent: 'flex-start', flexDirection: 'column' }}>
             <View style={{ flexDirection: 'row', height: 85, paddingLeft: 10, alignItems: 'center', justifyContent: 'flex-start' }}>
               <View style={{ height: 60, width: 60, borderRadius: 8, backgroundColor: 'whitesmoke', justifyContent: 'center' }}>
@@ -144,7 +145,7 @@ export default class LoginScreen extends Component {
         />
         <FlatList
           data={this.state.campLocations}
-          renderItem={({ item }) => this.renderCampLocation(item.name,item.address)}
+          renderItem={({ item }) => this.renderCampLocation({_id:item._id},item.name,item.address)}
           keyExtractor={item => item.id}
           refreshing={this.state.isFetching}
           onRefresh={()=> {  this.skip=0,this.setState({campLocations:[]}) ,this.getCampLocation() }
