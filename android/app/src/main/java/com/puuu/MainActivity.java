@@ -1,4 +1,4 @@
-package com.puuu;
+package com.puu;
 
 import com.reactnativenavigation.NavigationActivity;
 
