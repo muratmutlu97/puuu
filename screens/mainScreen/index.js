@@ -6,20 +6,19 @@ import { openDetailLocationModal } from "../../navigation/navigation"
 import User from '../../functions/User'
 import metrics from '../../functions/metrics';
 import { tsMethodSignature } from "@babel/types";
-
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 export default class LoginScreen extends Component {
 
   state = {
     search: '',
-    campLocations:[],
-    isFetching:false
+    campLocations: [],
+    isFetching: false
   };
-  skip=0
+  skip = 0
   updateSearch = search => {
     this.setState({ search });
   };
   getCampLocation() {
-    this.setState({isFetching:true})
     fetch(`${metrics.URL}/getCampLocation/?paging[skip]=${this.skip}&paging[limit]=${3}`, {
       method: 'GET',
       headers: {
@@ -29,18 +28,16 @@ export default class LoginScreen extends Component {
       }
 
     }).then(response => response.json())
-    .then(data => {
-      
-      var temp =this.state.campLocations
-      temp.push.apply(temp,data)
-      this.setState({campLocations:temp})
-    }).catch((err)=>{
-      console.warn(err);
-      
-    }).finally(()=>{
-      this.setState({isFetching:false})
+      .then(data => {
+        var temp = this.state.campLocations
+        temp.push.apply(temp, data)
+        this.setState({ campLocations: temp })
+      }).catch((err) => {
+        console.warn(err);
+      }).finally(() => {
+        this.setState({ isFetching: false })
 
-    })
+      })
   }
   componentDidMount() {
     this.getCampLocation()
@@ -53,7 +50,7 @@ export default class LoginScreen extends Component {
   onLoginPress() {
 
   }
-  renderCampLocation(props,name,address) {
+  renderCampLocation(props, name, address) {
     return (
       <ScrollView>
         <TouchableWithoutFeedback onPress={() => { openDetailLocationModal(props) }} >
@@ -61,8 +58,9 @@ export default class LoginScreen extends Component {
             <View style={{ flexDirection: 'row', height: 85, paddingLeft: 10, alignItems: 'center', justifyContent: 'flex-start' }}>
               <View style={{ height: 60, width: 60, borderRadius: 8, backgroundColor: 'whitesmoke', justifyContent: 'center' }}>
                 <Image
-                  style={{ height: 60, width: 60, borderRadius: 8, alignSelf: 'center' }}
+                  style={{ height: 60, width: 60, alignSelf: 'center', borderRadius: 8 }}
                   source={require('../../tempimages/kampp.jpg')}
+
                 />
               </View>
               <View style={{ width: 205, marginLeft: 3, marginTop: -10, justifyContent: 'center' }}>
@@ -77,29 +75,6 @@ export default class LoginScreen extends Component {
             <Divider style={{ backgroundColor: 'whitesmoke', width: '100%', height: 2 }} />
             <View style={{ flexDirection: 'row', height: 85, alignItems: 'center' }}>
               <View style={{ height: 50, width: '100%', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ width: 30, height: 30 }}>
-                  <Image
-                    style={{ height: 20, width: 20, alignSelf: 'center' }}
-                    source={require('./featureIcons/fire.png')}
-                  />
-                </View>
-
-                <View style={{ width: 30, height: 30 }}>
-
-                  <Image
-                    style={{ height: 20, width: 20, alignSelf: 'center' }}
-                    source={require('./featureIcons/water.png')}
-                  />
-
-                </View>
-                <View style={{ width: 30, height: 30 }}>
-
-                  <Image
-                    style={{ height: 20, width: 20, alignSelf: 'center' }}
-                    source={require('./featureIcons/socialFacility.png')}
-                  />
-
-                </View>
 
               </View>
             </View>
@@ -136,22 +111,25 @@ export default class LoginScreen extends Component {
             </View>
           </Modal>}
         <SearchBar
-          placeholder="Type Here..."
-          containerStyle={{ backgroundColor: 'white', maxHeight: 50, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, borderTopLeftRadius: 15, borderBottomColor: 'white', borderTopColor: 'white', width: '90%', alignSelf: 'center', marginTop: 10 }}
-          inputStyle={{ backgroundColor: 'white' }}
-          inputContainerStyle={{ backgroundColor: 'white', }}
+          placeholder="Ara : Kamp yeri, il, ilçe"
+          containerStyle={{backgroundColor:'white',elevation:11}}
+          inputContainerStyle={{backgroundColor:'whitesmoke'}}
           onChangeText={this.updateSearch}
           value={search}
         />
+       
         <FlatList
           data={this.state.campLocations}
-          renderItem={({ item }) => this.renderCampLocation({_id:item._id},item.name,item.address)}
+          renderItem={({ item }) => this.renderCampLocation({ _id: item._id }, item.name, item.address)}
           keyExtractor={item => item.id}
           refreshing={this.state.isFetching}
-          onRefresh={()=> {  this.skip=0,this.setState({campLocations:[]}) ,this.getCampLocation() }
-        }
-          onEndReached={()=>{
-            this.skip+=3;
+          onRefresh={() => {
+            this.setState({ isFetching: true })
+            this.skip = 0, this.setState({ campLocations: [] }), this.getCampLocation()
+          }
+          }
+          onEndReached={() => {
+            this.skip += 3;
             this.getCampLocation()
           }}
 
