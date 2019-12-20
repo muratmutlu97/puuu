@@ -7,19 +7,26 @@ import User from '../../functions/User'
 import metrics from '../../functions/metrics';
 import { tsMethodSignature } from "@babel/types";
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-export default class LoginScreen extends Component {
 
+export default class LoginScreen extends Component {
   state = {
     search: '',
     campLocations: [],
     isFetching: false
   };
+  searchText=''
   skip = 0
   updateSearch = search => {
-    this.setState({ search });
+    this.searchText=search
+    this.setState({search })
+    this.skip = 0
+    this.setState({campLocations: []})
+    this.getCampLocation()
+
   };
   getCampLocation() {
-    fetch(`${metrics.URL}/getCampLocation/?paging[skip]=${this.skip}&paging[limit]=${3}`, {
+
+    fetch(`${metrics.URL}/getCampLocation/?paging[skip]=${this.skip}&paging[limit]=${3}&search=${this.searchText}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -29,7 +36,15 @@ export default class LoginScreen extends Component {
 
     }).then(response => response.json())
       .then(data => {
-        var temp = this.state.campLocations
+
+        var temp = []
+
+        if (this.skip == 0) {
+          temp = []
+        } else {
+          temp=this.state.campLocations;
+
+        }
         temp.push.apply(temp, data)
         this.setState({ campLocations: temp })
       }).catch((err) => {
@@ -50,16 +65,16 @@ export default class LoginScreen extends Component {
   onLoginPress() {
 
   }
-  renderCampLocation(props, name, address) {
+  renderCampLocation(props, name, address, ImageURI) {
     return (
       <ScrollView>
         <TouchableWithoutFeedback onPress={() => { openDetailLocationModal(props) }} >
-          <View style={{ elevation: 8, height: 160, width: '90%', alignSelf: 'center', marginBottom: 10, marginTop: 15, borderRadius: 15, backgroundColor: 'white', justifyContent: 'flex-start', flexDirection: 'column' }}>
+          <View style={{ elevation: 2, height: 160, width: '98%', alignSelf: 'center', marginBottom: 2, borderRadius: 15, backgroundColor: 'white', justifyContent: 'flex-start', flexDirection: 'column' }}>
             <View style={{ flexDirection: 'row', height: 85, paddingLeft: 10, alignItems: 'center', justifyContent: 'flex-start' }}>
               <View style={{ height: 60, width: 60, borderRadius: 8, backgroundColor: 'whitesmoke', justifyContent: 'center' }}>
                 <Image
                   style={{ height: 60, width: 60, alignSelf: 'center', borderRadius: 8 }}
-                  source={require('../../tempimages/kampp.jpg')}
+                  source={{ uri: metrics.URL + '/' + ImageURI }}
 
                 />
               </View>
@@ -87,7 +102,6 @@ export default class LoginScreen extends Component {
   }
 
   render() {
-    const { search } = this.state;
 
     return (
       <View style={{
@@ -112,15 +126,15 @@ export default class LoginScreen extends Component {
           </Modal>}
         <SearchBar
           placeholder="Ara : Kamp yeri, il, ilçe"
-          containerStyle={{backgroundColor:'white',elevation:11}}
-          inputContainerStyle={{backgroundColor:'whitesmoke'}}
+          containerStyle={{ backgroundColor: 'white', elevation: 11 }}
+          inputContainerStyle={{ backgroundColor: 'whitesmoke' }}
           onChangeText={this.updateSearch}
-          value={search}
+          value={this.state.search}
         />
-       
+
         <FlatList
           data={this.state.campLocations}
-          renderItem={({ item }) => this.renderCampLocation({ _id: item._id }, item.name, item.address)}
+          renderItem={({ item }) => this.renderCampLocation({ _id: item._id }, item.name, item.address, item.ImageURI)}
           keyExtractor={item => item.id}
           refreshing={this.state.isFetching}
           onRefresh={() => {
@@ -129,6 +143,7 @@ export default class LoginScreen extends Component {
           }
           }
           onEndReached={() => {
+            
             this.skip += 3;
             this.getCampLocation()
           }}

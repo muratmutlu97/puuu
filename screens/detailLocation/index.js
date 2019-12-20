@@ -19,7 +19,7 @@ export default class DetailScreen extends Component {
     super()
     this.state = {
       detailJson: {},
-      images: [{ url: 'f', desc: 'adasd' }, { url: 'f', desc: 'adasd' }, { url: 'f', desc: 'adasd' },]
+      images: []
     };
     this.moveAnimation = new Animated.ValueXY({ x: metrics.DEVICE_WIDTH * 0.5 - 25, y: metrics.DEVICE_HEIGHT + 10 })
     setTimeout(() => {
@@ -31,7 +31,8 @@ export default class DetailScreen extends Component {
       <View style={{ height: metrics.DEVICE_HEIGHT * 0.35, width: metrics.DEVICE_WIDTH * 0.45, elevation: 20 }}>
         <Image
           style={{ height: metrics.DEVICE_HEIGHT * 0.35, width: metrics.DEVICE_WIDTH * 0.45, alignSelf: 'center', borderRadius: 15 }}
-          source={require('../../tempimages/kampp.jpg')}
+          source={{uri:metrics.URL+'/'+item.ImageURI}}
+
 
         />
       </View>
@@ -50,6 +51,13 @@ export default class DetailScreen extends Component {
       .then(data => {
 
         this.setState({ detailJson: data })
+        var images=[]
+        images.push({ImageURI:data.ImageURI})
+        images.push({ImageURI:data.ImageURI})
+
+        images.push({ImageURI:data.ImageURI})
+
+        this.setState({images:images})
 
       }).catch((err) => {
         console.warn(err);
@@ -122,7 +130,7 @@ export default class DetailScreen extends Component {
             <MapView
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               style={styles.map}
-
+              
               region={{
                 latitude: 9.162434,
                 longitude: 10.642788,

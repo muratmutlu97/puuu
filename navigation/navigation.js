@@ -64,6 +64,23 @@ export const openDetailLocationModal = (props) => Navigation.showModal({
     }],
   },
 });
+export const openAddLocation = (props) => Navigation.showModal({
+  stack: {
+    children: [{
+      component: {
+        name: 'addLocation',
+        passProps: props,
+        options: {
+          topBar: {
+            visible: true,
+            animate: false
+          },
+        },
+      },
+    }],
+  },
+});
+
 export const goHome = () => Navigation.setRoot({
   root: {
     bottomTabs: {
@@ -100,7 +117,7 @@ export const goHome = () => Navigation.setRoot({
       },
       {
         component: {
-          name: 'Home',
+          name: 'communityScreen',
           options: {
             bottomTab: {
               icon: require('../navigation/navigationIcons/homepage.png'),
