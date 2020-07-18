@@ -13,7 +13,7 @@
     "expo-linear-gradient": "^7.0.1",
     "formik": "^2.0.8",
     "galio-framework": "^0.6.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "16.9.0",
